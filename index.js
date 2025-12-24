@@ -353,7 +353,7 @@ run().catch(console.dir);
 
 //////////////////////////////////
 app.get("/", (req, res) => {
-  res.send("jidoka surver run");
+  res.send("jidoka surver runningggg");
 });
 
 app.listen(port, () => {
