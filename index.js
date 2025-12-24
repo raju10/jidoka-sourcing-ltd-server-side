@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const port = process.env.PORT || 4000;
 //important
 require("dotenv").config();
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+// const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 // middleWare
 app.use(cors());
 app.use(express.json());
@@ -255,6 +255,10 @@ async function run() {
       const result = await categoryCollection.find().toArray();
       res.send(result);
     });
+
+    app.get("/test", (req, res) => {
+      res.send("testing");
+    });
     // sub-category related api
 
     app.post("/subCategory", async (req, res) => {
@@ -323,20 +327,20 @@ async function run() {
     });
     // payment intent
 
-    app.post("/create-payment-intent", async (req, res) => {
-      const { price } = req.body;
-      const amount = parseInt(price * 100);
+    // app.post("/create-payment-intent", async (req, res) => {
+    //   const { price } = req.body;
+    //   const amount = parseInt(price * 100);
 
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount,
-        currency: "usd",
-        payment_method_types: ["card"],
-      });
-      console.log("amount inside the intant===", amount, paymentIntent);
-      res.send({
-        clientSecret: paymentIntent.client_secret,
-      });
-    });
+    //   const paymentIntent = await stripe.paymentIntents.create({
+    //     amount: amount,
+    //     currency: "usd",
+    //     payment_method_types: ["card"],
+    //   });
+    //   console.log("amount inside the intant===", amount, paymentIntent);
+    //   res.send({
+    //     clientSecret: paymentIntent.client_secret,
+    //   });
+    // });
     //////////////////////
 
     // Send a ping to confirm a successful connection
