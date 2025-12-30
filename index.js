@@ -246,7 +246,30 @@ app.get("/subCategory", async (req, res) => {
   const result = await subCategoryCollection.find().toArray();
   res.send(result);
 });
-
+// 1. Delete Subcategory
+app.delete('/subCategory/:id', async (req, res) => {
+  console.log("251 no line====>>>>", req.params.id)
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await subCategoryCollection.deleteOne(query); // Ensure subCategoryCollection is defined
+  res.send(result);
+});
+// 2. Edit (Update) Subcategory
+app.put('/subCategory/:id', async (req, res) => {
+  console.log("259 no line====>>>>", req.params.id)
+  const id = req.params.id;
+  const filter = { _id: new ObjectId(id) };
+  const updatedSubCategory = req.body;
+  const updateDoc = {
+    $set: {
+      subCategoryName: updatedSubCategory.subCategoryName,
+      subCategoryImage: updatedSubCategory.subCategoryImage,
+      selectedCategoryItem: updatedSubCategory.selectedCategoryItem
+    },
+  };
+  const result = await subCategoryCollection.updateOne(filter, updateDoc);
+  res.send(result);
+});
 // Product-sub-category related api
 app.post("/product", async (req, res) => {
   const productItem = req.body;
@@ -257,6 +280,45 @@ app.post("/product", async (req, res) => {
 app.get("/product", async (req, res) => {
   const result = await productCollection.find().toArray();
   res.send(result);
+});
+app.delete("/product/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await productCollection.deleteOne(query);
+  res.send(result);
+});
+// Product Update API
+app.put('/product/:id', async (req, res) => {
+  const id = req.params.id;
+  const filter = { _id: new ObjectId(id) };
+  const updatedData = req.body;
+
+  // Construct the update object
+  const updateDoc = {
+    $set: {
+      productCode: updatedData.productCode,
+      productTitle: updatedData.productTitle,
+      material: updatedData.material,
+      price: updatedData.price,
+      discount: updatedData.discount,
+      size: updatedData.size,
+      color: updatedData.color,
+      image: updatedData.image,
+      description: updatedData.description,
+      noOfQuantity: updatedData.noOfQuantity,
+      mostAffordable: updatedData.mostAffordable,
+      subCategoryItem: updatedData.subCategoryItem,
+      categoryItem: updatedData.categoryItem,
+    },
+  };
+
+  try {
+    const result = await productCollection.updateOne(filter, updateDoc);
+    res.send(result);
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).send({ message: "Failed to update product" });
+  }
 });
 
 // carts related api
