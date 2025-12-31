@@ -134,15 +134,19 @@ app.post("/users", async (req, res) => {
   res.send(result);
 });
 
+
 // user role update
 app.patch("/users/admin/:id", verifyToken, varifyAdmin, async (req, res) => {
   const id = req.params.id;
+  const { role } = req.body; // Extract role from req.body (sent from frontend)
+
   const filter = { _id: new ObjectId(id) };
   const updatedDoc = {
     $set: {
-      role: "Admin",
+      role: role, // Use the role sent from the frontend
     },
   };
+
   const result = await userCollection.updateOne(filter, updatedDoc);
   res.send(result);
 });
@@ -230,10 +234,30 @@ app.get("/category", async (req, res) => {
   const result = await categoryCollection.find().toArray();
   res.send(result);
 });
-
-app.get("/test", (req, res) => {
-  res.send("testing");
+// 1. Delete category
+app.delete('/category/:id', async (req, res) => {
+  console.log("239 no line====>>>>", req.params.id)
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await categoryCollection.deleteOne(query); // Ensure categoryCollection is defined
+  res.send(result);
 });
+// 2. Edit (Update) category
+app.put('/category/:id', async (req, res) => {
+  console.log("247 no line====>>>>", req.params.id)
+  const id = req.params.id;
+  const filter = { _id: new ObjectId(id) };
+  const updatedCategory = req.body;
+  const updateDoc = {
+    $set: {
+      categoryName: updatedCategory.categoryName,
+      categoryImage: updatedCategory.categoryImage,
+    },
+  };
+  const result = await categoryCollection.updateOne(filter, updateDoc);
+  res.send(result);
+});
+
 
 // sub-category related api
 app.post("/subCategory", async (req, res) => {
