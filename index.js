@@ -135,7 +135,7 @@ app.post("/users", async (req, res) => {
 });
 
 
-// user role update
+// user role update seee 
 app.patch("/users/admin/:id", verifyToken, varifyAdmin, async (req, res) => {
   const id = req.params.id;
   const { role } = req.body; // Extract role from req.body (sent from frontend)
